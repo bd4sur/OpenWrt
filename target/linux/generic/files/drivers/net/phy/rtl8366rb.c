@@ -20,7 +20,6 @@
 #include <linux/delay.h>
 #include <linux/skbuff.h>
 #include <linux/rtl8366.h>
-#include <linux/version.h>
 
 #include "rtl8366_smi.h"
 
@@ -1479,11 +1478,7 @@ static int rtl8366rb_probe(struct platform_device *pdev)
 	return err;
 }
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-static int rtl8366rb_remove(struct platform_device *pdev)
-#else
 static void rtl8366rb_remove(struct platform_device *pdev)
-#endif
 {
 	struct rtl8366_smi *smi = platform_get_drvdata(pdev);
 
@@ -1493,10 +1488,6 @@ static void rtl8366rb_remove(struct platform_device *pdev)
 		rtl8366_smi_cleanup(smi);
 		kfree(smi);
 	}
-
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-	return 0;
-#endif
 }
 
 #ifdef CONFIG_OF
@@ -1513,7 +1504,7 @@ static struct platform_driver rtl8366rb_driver = {
 		.of_match_table = of_match_ptr(rtl8366rb_match),
 	},
 	.probe		= rtl8366rb_probe,
-	.remove		= rtl8366rb_remove,
+	.remove_new		= rtl8366rb_remove,
 };
 
 static int __init rtl8366rb_module_init(void)

@@ -20,7 +20,6 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/platform_data/b53.h>
-#include <linux/version.h>
 
 #include "b53_priv.h"
 
@@ -218,25 +217,17 @@ static int b53_mmap_probe(struct platform_device *pdev)
 	return b53_swconfig_switch_register(dev);
 }
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-static int b53_mmap_remove(struct platform_device *pdev)
-#else
 static void b53_mmap_remove(struct platform_device *pdev)
-#endif
 {
 	struct b53_device *dev = platform_get_drvdata(pdev);
 
 	if (dev)
 		b53_switch_remove(dev);
-
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-	return 0;
-#endif
 }
 
 static struct platform_driver b53_mmap_driver = {
 	.probe = b53_mmap_probe,
-	.remove = b53_mmap_remove,
+	.remove_new = b53_mmap_remove,
 	.driver = {
 		.name = "b53-switch",
 	},

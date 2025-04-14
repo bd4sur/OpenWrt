@@ -15,7 +15,6 @@
  * GNU General Public License for more details.
  */
 
-#include <linux/of.h>
 #include <linux/list.h>
 #include <linux/bitops.h>
 #include <linux/switch.h>
@@ -24,6 +23,7 @@
 #include <linux/lockdep.h>
 #include <linux/ar8216_platform.h>
 #include <linux/workqueue.h>
+#include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/leds.h>
 #include <linux/mdio.h>

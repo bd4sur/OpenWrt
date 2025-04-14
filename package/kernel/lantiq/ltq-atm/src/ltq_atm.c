@@ -41,6 +41,7 @@
 #include <linux/atm.h>
 #include <linux/clk.h>
 #include <linux/interrupt.h>
+#include <linux/version.h>
 #ifdef CONFIG_XFRM
   #include <net/xfrm.h>
 #endif
@@ -1864,11 +1865,7 @@ INIT_PRIV_DATA_FAIL:
 	return ret;
 }
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-static int ltq_atm_remove(struct platform_device *pdev)
-#else
 static void ltq_atm_remove(struct platform_device *pdev)
-#endif
 {
 	int port_num;
 	struct ltq_atm_ops *ops = platform_get_drvdata(pdev);
@@ -1888,15 +1885,11 @@ static void ltq_atm_remove(struct platform_device *pdev)
 	ops->shutdown();
 
 	clear_priv_data();
-
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-	return 0;
-#endif
 }
 
 static struct platform_driver ltq_atm_driver = {
 	.probe = ltq_atm_probe,
-	.remove = ltq_atm_remove,
+	.remove_new = ltq_atm_remove,
 	.driver = {
 		.name = "atm",
 		.of_match_table = ltq_atm_match,

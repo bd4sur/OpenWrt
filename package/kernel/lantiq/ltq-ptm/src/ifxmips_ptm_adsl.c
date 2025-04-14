@@ -1566,11 +1566,7 @@ INIT_PRIV_DATA_FAIL:
  *  Output:
  *   none
  */
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-static int ltq_ptm_remove(struct platform_device *pdev)
-#else
 static void ltq_ptm_remove(struct platform_device *pdev)
-#endif
 {
     int i;
 
@@ -1595,15 +1591,11 @@ static void ltq_ptm_remove(struct platform_device *pdev)
     ifx_ptm_uninit_chip();
 
     clear_priv_data();
-
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6,11,0)
-    return 0;
-#endif
 }
 
 static struct platform_driver ltq_ptm_driver = {
        .probe = ltq_ptm_probe,
-       .remove = ltq_ptm_remove,
+       .remove_new = ltq_ptm_remove,
        .driver = {
                .name = "ptm",
                .of_match_table = ltq_ptm_match,
