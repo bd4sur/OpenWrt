@@ -132,14 +132,14 @@ Signed-off-by: Daniel Golle <daniel@makrotopia.org>
  
  /*
   * Define if arch has non-standard setup.  This is a _PCI_ standard
-@@ -728,6 +731,10 @@ struct ata_device {
- 	union acpi_object	*gtf_cache;
- 	unsigned int		gtf_filter;
+@@ -934,6 +937,10 @@ struct ata_port {
+ #ifdef CONFIG_ATA_ACPI
+ 	struct ata_acpi_gtm	__acpi_init_gtm; /* use ata_acpi_init_gtm() */
  #endif
 +#ifdef CONFIG_ATA_LEDS
 +	struct led_trigger	*ledtrig;
 +	char			ledtrig_name[8];
 +#endif
- #ifdef CONFIG_SATA_ZPODD
- 	void			*zpodd;
- #endif
+ };
+ 
+ /* The following initializer overrides a method to NULL whether one of

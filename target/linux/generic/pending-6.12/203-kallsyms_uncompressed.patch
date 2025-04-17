@@ -79,7 +79,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  static int absolute_percpu;
  
  static int token_profit[0x10000];
-@@ -412,12 +413,14 @@ static void write_src(void)
+@@ -412,13 +413,17 @@ static void write_src(void)
  		for (k = 0; k < table[i]->len; k++)
  			printf(", 0x%02x", table[i]->sym[k]);
  
@@ -89,6 +89,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
 -		 */
 -		expand_symbol(table[i]->sym, table[i]->len, buf);
 -		strcpy((char *)table[i]->sym, buf);
+-		printf("\t/* %s */\n", table[i]->sym);
 +		if (!uncompressed) {
 +			/*
 +			 * Now that we wrote out the compressed symbol name, restore the
@@ -96,11 +97,14 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
 +			 */
 +			expand_symbol(table[i]->sym, table[i]->len, buf);
 +			strcpy((char *)table[i]->sym, buf);
++			printf("\t/* %s */\n", table[i]->sym);
++		} else {
++			printf("\n");
 +		}
- 		printf("\t/* %s */\n", table[i]->sym);
  	}
  	printf("\n");
-@@ -429,20 +432,22 @@ static void write_src(void)
+ 
+@@ -429,20 +434,22 @@ static void write_src(void)
  
  	free(markers);
  
@@ -136,7 +140,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  
  	output_label("kallsyms_offsets");
  
-@@ -532,6 +537,9 @@ static unsigned char *find_token(unsigne
+@@ -532,6 +539,9 @@ static unsigned char *find_token(unsigne
  {
  	int i;
  
@@ -146,7 +150,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  	for (i = 0; i < len - 1; i++) {
  		if (str[i] == token[0] && str[i+1] == token[1])
  			return &str[i];
-@@ -604,6 +612,9 @@ static void optimize_result(void)
+@@ -604,6 +614,9 @@ static void optimize_result(void)
  {
  	int i, best;
  
@@ -156,7 +160,7 @@ Signed-off-by: Felix Fietkau <nbd@nbd.name>
  	/* using the '\0' symbol last allows compress_symbols to use standard
  	 * fast string functions */
  	for (i = 255; i >= 0; i--) {
-@@ -763,6 +774,7 @@ int main(int argc, char **argv)
+@@ -763,6 +776,7 @@ int main(int argc, char **argv)
  		static const struct option long_options[] = {
  			{"all-symbols",     no_argument, &all_symbols,     1},
  			{"absolute-percpu", no_argument, &absolute_percpu, 1},
